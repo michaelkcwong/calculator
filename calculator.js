@@ -6,9 +6,16 @@ const calculator = {
 };
 
 function inputDigit(digit) {
-  const { displayValue } = calculator;
+  const { displayValue, waitingForSecondOperand } = calculator;
+
+  if (waitingForSecondOperand === true) {
+    calculator.displayValue = digit;
+    calculator.waitingForSecondOperand = false;
+  } else {
   //Overwrite 'displayValue' if the current value is '0' otherwise append to it
   calculator.displayValue = displayValue === '0' ? digit : displayValue + digit; 
+  }
+  console.log(calculator);
 }
 
 function inputDecimal(dot) {
@@ -19,6 +26,23 @@ function inputDecimal(dot) {
   }
 }
 
+function handleOperator(nextOperator) {
+  //Destructure the properties on the calculator object
+  const { firstOperand, displayValue, operator } = calculator
+  // 'parseFloat' converts the string contents of 'displayValue'
+  // to a floating-point number
+  const inputValue = parseFloat(displayValue);
+
+  //verify that 'firstOperand' is null and that the 'inputValue'
+  //is not a 'NaN' value
+  if (firstOperand === null && !isNaN(inputValue)) {
+    //Update the firstOperand property
+    calculator.firstOperand = inputValue;
+  }
+
+  calculator.waitingForSecondOperand = true;
+  calculator.operator = nextOperator;
+}
 function updateDisplay() {
   // Select the element with class of 'calculator-screen'
   const display = document.querySelector('.calculator-screen');
@@ -41,7 +65,8 @@ keys.addEventListener('click', (event) => {
   }
 
   if (target.classList.contains('operator')) {
-    console.log('operator', target.value);
+    handleOperator(target.value);
+    updateDisplay();
     return;
   }
 
