@@ -12,6 +12,7 @@ function inputDigit(digit) {
     calculator.displayValue = digit;
     calculator.waitingForSecondOperand = false;
   } else {
+    // Overwrite `displayValue` if the current value is '0' otherwise append to it
     calculator.displayValue = displayValue === '0' ? digit : displayValue + digit;
   }
 
@@ -19,19 +20,26 @@ function inputDigit(digit) {
 }
 
 function inputDecimal(dot) {
+  // If the `displayValue` property does not contain a decimal point
   if (calculator.waitingForSecondOperand === true) {
     calculator.displayValue = '0.'
     calculator.waitingForSecondOperand = false;
     return
   }
+  // If the `displayValue` property does not contain a decimal point
   if (!calculator.displayValue.includes(dot)) {
+    // Append the decimal point
     calculator.displayValue += dot;
   }
 }
 
 function handleOperator(nextOperator) {
+   // Destructure the properties on the calculator object
   const { firstOperand, displayValue, operator } = calculator
+   // `parseFloat` converts the string contents of `displayValue`
+  // to a floating-point number
   const inputValue = parseFloat(displayValue);
+  
   
   if (operator && calculator.waitingForSecondOperand)  {
     calculator.operator = nextOperator;
@@ -39,7 +47,8 @@ function handleOperator(nextOperator) {
     return;
   }
 
-
+// verify that `firstOperand` is null and that the `inputValue`
+  // is not a `NaN` value
   if (firstOperand == null && !isNaN(inputValue)) {
     calculator.firstOperand = inputValue;
   } else if (operator) {
@@ -77,7 +86,9 @@ function resetCalculator() {
 }
 
 function updateDisplay() {
+   // select the element with class of `calculator-screen`
   const display = document.querySelector('.calculator-screen');
+  // update the value of the element with the contents of `displayValue`
   display.value = calculator.displayValue;
 }
 
@@ -85,8 +96,12 @@ updateDisplay();
 
 const keys = document.querySelector('.calculator-keys');
 keys.addEventListener('click', (event) => {
+  // Access the clicked element
   const { target } = event;
+  // is equivalent to const target = event.target
   const { value } = target;
+    // Check if the clicked element is a button.
+  // If not, exit from the function
   if (!target.matches('button')) {
     return;
   }
