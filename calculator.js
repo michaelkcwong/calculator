@@ -45,7 +45,7 @@ function handleOperator(nextOperator) {
   } else if (operator) {
     const result = calculate(firstOperand, inputValue, operator);
 
-    calculator.displayValue = `${parseFloat(result.toFiced(7))}`;
+    calculator.displayValue = `${parseFloat(result.toFixed(7))}`;
     calculator.firstOperand = result;
   }
 
