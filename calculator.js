@@ -33,6 +33,12 @@ function handleOperator(nextOperator) {
   // to a floating-point number
   const inputValue = parseFloat(displayValue);
 
+  if (operator && calculator.waitingForSecondOperand) {
+    calculator.operator = nextOperator;
+    console.log(calculator);
+    return;
+  }
+
   //verify that 'firstOperand' is null and that the 'inputValue'
   //is not a 'NaN' value
   if (firstOperand === null && !isNaN(inputValue)) {
